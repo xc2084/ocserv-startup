@@ -16,6 +16,10 @@ fi
 basepath=$(dirname $0)
 cd ${basepath}
 
+yum install -y iptables-services
+systemctl stop firewalld.service
+systemctl start iptables.service
+
 # 使用受信任的证书 务必修改为自己申请的证书
 wget https://github.com/itviewer/ocserv-startup/raw/master/server-cert.pem
 wget https://github.com/itviewer/ocserv-startup/raw/master/server-key.pem
