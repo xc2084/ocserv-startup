@@ -13,6 +13,8 @@ if [[ $(grep "release 7." /etc/redhat-release 2>/dev/null | wc -l) -eq 0 ]]; the
     exit 1
 fi
 
+yum -y update
+
 basepath=$(dirname $0)
 cd ${basepath}
 
