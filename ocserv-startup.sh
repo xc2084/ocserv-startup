@@ -21,8 +21,8 @@ systemctl stop firewalld.service
 systemctl start iptables.service
 
 # 使用受信任的证书 务必修改为自己申请的证书
-wget https://github.com/itviewer/ocserv-startup/raw/master/server-cert.pem
-wget https://github.com/itviewer/ocserv-startup/raw/master/server-key.pem
+#wget https://github.com/itviewer/ocserv-startup/raw/master/server-cert.pem
+#wget https://github.com/itviewer/ocserv-startup/raw/master/server-key.pem
 
 function ConfigEnvironmentVariable {
     # 变量设置
@@ -88,43 +88,9 @@ function InstallOcserv {
 
 function ConfigOcserv {
     # 检测是否有证书和 key 文件
-    if [[ ! -f "${servercert}" ]] || [[ ! -f "${serverkey}" ]]; then
-        # 创建 ca 证书和服务器证书（参考http://www.infradead.org/ocserv/manual.html#heading5）
-        certtool --generate-privkey --outfile ca-key.pem
-
-        cat << _EOF_ >ca.tmpl
-cn = "ocserv VPN"
-organization = "ocserv"
-serial = 1
-expiration_days = 3650
-ca
-signing_key
-cert_signing_key
-crl_signing_key
-_EOF_
-
-        certtool --generate-self-signed --load-privkey ca-key.pem \
-        --template ca.tmpl --outfile ca-cert.pem
-        certtool --generate-privkey --outfile ${serverkey}
-
-        cat << _EOF_ >server.tmpl
-cn = "ocserv VPN"
-organization = "ocserv"
-serial = 2
-expiration_days = 3650
-signing_key
-encryption_key #only if the generated key is an RSA one
-tls_www_server
-_EOF_
-
-        certtool --generate-certificate --load-privkey ${serverkey} \
-        --load-ca-certificate ca-cert.pem --load-ca-privkey ca-key.pem \
-        --template server.tmpl --outfile ${servercert}
-    fi
-
     # 复制证书
-    cp "${servercert}" /etc/pki/ocserv/public/server.crt
-    cp "${serverkey}" /etc/pki/ocserv/private/server.key
+    #cp "${servercert}" /etc/pki/ocserv/public/server.crt
+    #cp "${serverkey}" /etc/pki/ocserv/private/server.key
 
     # 编辑配置文件
     (echo "${password}"; sleep 1; echo "${password}") | ocpasswd -c "${confdir}/ocpasswd" ${username}
