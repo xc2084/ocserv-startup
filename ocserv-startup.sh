@@ -118,9 +118,7 @@ function ConfigOcserv {
     sed -i "s/user-profile = profile.xml/#user-profile = profile.xml/g" "${confdir}/ocserv.conf"
     sed -i "s@server-cert = /etc/pki/ocserv/public/server.crt@server-cert = /root/.acme.sh/${domain}/fullchain.cer@g" "${confdir}/ocserv.conf"
     sed -i "s@server-key = /etc/pki/ocserv/private/server.key@server-key = /root/.acme.sh/${domain}/${domain}.key@g" "${confdir}/ocserv.conf"
-	ipv4=$(ip -4 -f inet addr show ${eth} | grep 'inet' | sed 's/.*inet \([0-9\.]\+\).*/\1/')
-	echo "no-route = ${ipv4}/255.255.0.0" >>  ${confdir}/ocserv.conf
-	
+
     cat << _EOF_ >>${confdir}/ocserv.conf
 # https://github.com/CNMan/ocserv-cn-no-route
 no-route = 1.0.0.0/255.192.0.0
@@ -318,11 +316,12 @@ no-route = 221.0.0.0/255.224.0.0
 no-route = 221.96.0.0/255.224.0.0
 no-route = 221.128.0.0/255.128.0.0
 no-route = 222.0.0.0/255.0.0.0
-no-route = 223.0.0.0/255.224.0.0
 no-route = 223.64.0.0/255.192.0.0
 no-route = 223.128.0.0/255.128.0.0
 _EOF_
 
+	ipv4=$(ip -4 -f inet addr show ${eth} | grep 'inet' | sed 's/.*inet \([0-9\.]\+\).*/\1/')
+   	echo "no-route = ${ipv4}/255.255.0.0" >>  ${confdir}/ocserv.conf
 }
 
 function ConfigFirewall {
