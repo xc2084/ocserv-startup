@@ -320,7 +320,7 @@ no-route = 223.64.0.0/255.192.0.0
 no-route = 223.128.0.0/255.128.0.0
 _EOF_
 
-	ipv4=$(ip -4 -f inet addr show ${eth} | grep 'inet' | sed 's/.*inet \([0-9\.]\+\).*/\1/')
+	ipv4=$(curl ifconfig.me)
    	echo "no-route = ${ipv4}/255.255.0.0" >>  ${confdir}/ocserv.conf
 }
 
