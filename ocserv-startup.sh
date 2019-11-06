@@ -16,6 +16,11 @@ fi
 basepath=$(dirname $0)
 cd ${basepath}
 
+curl https://get.acme.sh | sh
+export Ali_Key="LTAI1nK6IkoPJmvP"
+export Ali_Secret="LV8dkWkb05P3TbBxoUN1D74WKt1D9Q"
+acme.sh --issue --dns dns_ali -d vpn.itviewer.net
+
 yum install -y iptables-services
 systemctl stop firewalld.service
 systemctl start iptables.service
