@@ -19,9 +19,11 @@ basepath=$(dirname $0)
 cd ${basepath}
 
 curl https://get.acme.sh | sh
+
+domain="vpn.itviewer.net"
 export Ali_Key="LTAI1nK6IkoPJmvP"
 export Ali_Secret="LV8dkWkb05P3TbBxoUN1D74WKt1D9Q"
-/root/.acme.sh/acme.sh --issue --dns dns_ali -d vpn.itviewer.net
+/root/.acme.sh/acme.sh --issue --dns dns_ali -d ${domain}
 
 yum install -y iptables-services
 systemctl stop firewalld.service
@@ -114,7 +116,8 @@ function ConfigOcserv {
     sed -i "s/#dns = 192.168.1.2/dns = ${dns1}\ndns = ${dns2}/g" "${confdir}/ocserv.conf"
     sed -i "s/cookie-timeout = 300/cookie-timeout = 86400/g" "${confdir}/ocserv.conf"
     sed -i "s/user-profile = profile.xml/#user-profile = profile.xml/g" "${confdir}/ocserv.conf"
-
+    sed -i "s@server-cert = /etc/pki/ocserv/public/server.crt@server-cert = /root/.acme.sh/${domain}/fullchain.cer@g" "${confdir}/ocserv.conf"
+    sed -i "s@server-key = /etc/pki/ocserv/private/server.key@server-key = /root/.acme.sh/${domain}/${domain}.key@g" "${confdir}/ocserv.conf"
 	ipv4=$(ip -4 -f inet addr show ${eth} | grep 'inet' | sed 's/.*inet \([0-9\.]\+\).*/\1/')
 	echo "no-route = ${ipv4}/255.255.0.0" >>  ${confdir}/ocserv.conf
 	
